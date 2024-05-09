@@ -32,11 +32,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         UserDetails userDetails = customAddUrlUserDetailsService.loadUserByUsernameAndUrl(username, requestUrl);
         
-        log.info("--------------------------------------------------------");
-        log.info("password             = {}", password);
-        log.info("userDetails password = {}", userDetails.getPassword());
-        log.info("--------------------------------------------------------");
-
         if (!bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("유효하지 않은 비밀번호 입니다!!");
         }
