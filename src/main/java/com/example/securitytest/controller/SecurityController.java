@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.securitytest.custom.CustomToken;
 import com.example.securitytest.dto.CustomUserDetails;
 import com.example.securitytest.dto.JoinDTO;
 import com.example.securitytest.dto.LoginDTO;
@@ -47,7 +48,13 @@ public class SecurityController {
 	
     @GetMapping("/taking")
     public ResponseEntity<String> taskingPage() {
-    	return null;
+    	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    	CustomToken token = (CustomToken) auth;
+    	log.info("username   = {}", auth.getName()); // Or auth.getPrincipal()
+    	log.info("password   = {}", auth.getCredentials()); // 비밀번호 같이 민감한 정보는 인증 완료 후 null로 초기화된다.
+    	log.info("access url = {}", auth.getDetails());
+    	log.info("startTime  = {}", token.getStartTime());
+    	return ResponseEntity.ok().body("taking Page");
     }
 	
 }

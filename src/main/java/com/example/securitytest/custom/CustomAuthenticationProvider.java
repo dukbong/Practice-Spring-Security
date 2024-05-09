@@ -1,6 +1,5 @@
 package com.example.securitytest.custom;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,12 +37,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         
 		// Url 로직 추가 예정
         
-		return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+		// return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+		return new CustomToken(username, password, userDetails.getAuthorities());
 	}
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+		// return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+		return CustomToken.class.isAssignableFrom(authentication);
 	}
 
 }

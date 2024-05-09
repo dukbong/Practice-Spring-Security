@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.example.securitytest.custom.CustomToken;
 import com.example.securitytest.dto.LoginDTO;
 import com.example.securitytest.service.LoginService;
 
@@ -38,7 +39,8 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public void loginProcess(String url, LoginDTO loginDTO) {
 		log.info("LoginServiceImpl - loginProcess()");
-		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassWord());
+		// UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassWord());
+		CustomToken authToken = new CustomToken(loginDTO.getUserName(), loginDTO.getPassWord());
 		authToken.setDetails(url);
 		Authentication auth = authenticationManager.authenticate(authToken);
 		SecurityContextHolder.getContext().setAuthentication(auth);
