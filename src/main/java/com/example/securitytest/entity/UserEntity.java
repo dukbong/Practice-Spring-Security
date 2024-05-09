@@ -26,14 +26,17 @@ public class UserEntity {
 	
 	private String passWord;
 	
+	private String accessUrl;
+	
 	private String role;
 
 	@Builder
-	public UserEntity(Long id, String userName, String passWord, String role) {
+	public UserEntity(Long id, String userName, String passWord, String role, String accessUrl) {
 		this.id = id;
 		this.userName = userName;
 		this.passWord = passWord;
 		this.role = role;
+		this.accessUrl = accessUrl;
 	}
 	
 	public void updateUserName(String userName) {

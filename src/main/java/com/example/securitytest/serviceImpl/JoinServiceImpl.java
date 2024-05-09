@@ -22,14 +22,15 @@ public class JoinServiceImpl implements JoinService {
 	@Override
 	public void joinProcess(JoinDTO joinDTO) {
 		log.info("JoinServiceImpl - joinProcess()");
-		boolean duplicateUserName = userEntityRepository.existsByUserName(joinDTO.getUserName());
-		if(duplicateUserName) {
-			throw new IllegalArgumentException("Duplicate UserName");
+		boolean duplicateUserNameAndAccessUrl = userEntityRepository.existsByUserName(joinDTO.getUserName());
+		if(duplicateUserNameAndAccessUrl) {
+			throw new IllegalArgumentException("Duplicate UserName or AccessUrl");
 		}
 		
 		UserEntity userEntity = UserEntity.builder().userName(joinDTO.getUserName())
 											        .passWord(bCryptPasswordEncoder.encode(joinDTO.getPassWord()))
 											        .role("ROLE_B")
+											        .accessUrl(joinDTO.getAccessUrl())
 											        .build();
 		userEntityRepository.save(userEntity);
 	}

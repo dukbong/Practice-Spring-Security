@@ -14,7 +14,8 @@ public class CustomUserDetails implements UserDetails{
 	private LoginProcessDTO loginProcessDTO;
 	
 	public CustomUserDetails(LoginProcessDTO loginProcessDTO) {
-		log.info("CustomUserDetails - constructor");
+		log.info("CustomUserDetails - constructor / password = {}", loginProcessDTO.getPassWord());
+		
 		this.loginProcessDTO = loginProcessDTO;
 	}
 
@@ -38,6 +39,10 @@ public class CustomUserDetails implements UserDetails{
 	@Override
 	public String getUsername() {
 		return loginProcessDTO.getUserName();
+	}
+	
+	public String getUrl() {
+		return loginProcessDTO.getAccessUrl();
 	}
 
 	@Override

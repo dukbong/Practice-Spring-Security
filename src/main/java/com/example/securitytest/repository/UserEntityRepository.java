@@ -7,7 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.securitytest.entity.UserEntity;
 
 public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
+	boolean existsByUserNameAndAccessUrl(String userName, String accessUrl);
+	
 	boolean existsByUserName(String userName);
 
 	Optional<UserEntity> findByUserName(String username);
+	
+	Optional<UserEntity> findByUserNameAndAccessUrl(String username, String url);
 }

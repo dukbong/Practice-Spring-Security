@@ -2,47 +2,31 @@ package com.example.securitytest.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.securitytest.filter.CustomAuthorizationFilter;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
-	@Bean
-	public RoleHierarchy roleHierarchy() {
-		RoleHierarchyImpl roleHierarchyImpl = new RoleHierarchyImpl();
-		roleHierarchyImpl.setHierarchy("C > B > A");
-		return roleHierarchyImpl;
-	}
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		// 필터를 사용해서 contextHolder가 유지되는지 확인하기 위한 테스트필터
 		// http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 		http.authorizeHttpRequests(auth -> {
-				auth.requestMatchers("/", "/login", "/join").permitAll();
+				auth.requestMatchers("/", "/login/**", "/join").permitAll();
 				// auth.requestMatchers("/info/**").hasAnyRole("A", "B", "C");
 				// auth.requestMatchers("/taking").hasAnyRole("B","C");
 				
 				// RoleHierarchy를 Bean 등록하면 이런식으로 줄여서 사용이 가능하다.
 				// 장점 : 가독성에 좋다.
 				auth.requestMatchers("/info/**").hasAnyRole("A");
-				auth.requestMatchers("/taking").hasAnyRole("B");
+				auth.requestMatchers("/taking/**").hasAnyRole("B");
 				auth.requestMatchers("/admin").hasRole("C");
 				auth.anyRequest().authenticated();
 			});
@@ -71,8 +55,13 @@ public class SecurityConfig {
 		return http.build();
 	}
 	
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
-    }
+//    @Bean
+//    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+//        return http.getSharedObject(AuthenticationManagerBuilder.class).build();
+//    }
+	
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 }

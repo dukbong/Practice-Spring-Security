@@ -1,13 +1,17 @@
 package com.example.securitytest.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.securitytest.dto.CustomUserDetails;
 import com.example.securitytest.dto.JoinDTO;
 import com.example.securitytest.dto.LoginDTO;
 import com.example.securitytest.service.JoinService;
@@ -29,9 +33,9 @@ public class SecurityController {
 		return ResponseEntity.ok().body("Main Page");
 	}
 	
-	@PostMapping("/login")
-	public ResponseEntity<LoginDTO> loginProcess(@RequestBody LoginDTO loginDTO) {
-		loginServiceImpl.loginProcess(loginDTO);
+	@PostMapping("/login/{url}")
+	public ResponseEntity<LoginDTO> loginProcess(@PathVariable("url") String url, @RequestBody LoginDTO loginDTO) {
+		loginServiceImpl.loginProcess(url, loginDTO);
 		return ResponseEntity.ok().body(loginDTO);
 	}
 	
@@ -41,10 +45,9 @@ public class SecurityController {
 		return ResponseEntity.ok().body(joinDTO);
 	}
 	
-	@GetMapping("/taking")
-	public ResponseEntity<String> taskingP() {
-		log.info("tasking");
-		return ResponseEntity.ok().body("tasking Page");
-	}
+    @GetMapping("/taking")
+    public ResponseEntity<String> taskingPage() {
+    	return null;
+    }
 	
 }
