@@ -6,8 +6,8 @@
 ---
 
 ### 세션 기반 인증
-1. Provider 커스텀 & AuthenticationManagement 커스텀
-2. 인증 방식 커스텀 & 토큰 커스텀
+1. Provider 커스텀(AuthenticationManagement)
+2. 인증 방식 커스텀 & 사용자 인증 토큰 커스텀
 3. Security 세션 이벤트 추적
 4. 로그인 이벤트 추적
 5. 세션 고정 공격 방지
