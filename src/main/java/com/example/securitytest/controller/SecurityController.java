@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.securitytest.custom.CustomToken;
 import com.example.securitytest.dto.JoinDTO;
 import com.example.securitytest.dto.LoginDTO;
+import com.example.securitytest.service.AdminService;
 import com.example.securitytest.service.JoinService;
 import com.example.securitytest.service.LoginService;
 
@@ -27,6 +28,7 @@ public class SecurityController {
 	
 	private final LoginService loginServiceImpl;
 	private final JoinService joinServiceImpl;
+	private final AdminService adminServiceImpl;
 
 	@GetMapping("/")
 	public ResponseEntity<String> mainP() {
@@ -56,6 +58,12 @@ public class SecurityController {
     	log.info("access url = {}", detail.get("url"));
     	log.info("startTime  = {}", token.getStartTime());
     	return ResponseEntity.ok().body("taking Page");
+    }
+    
+    @GetMapping("/get/allsession")
+    public ResponseEntity<Map<String, String>> allSession() {
+    	Map<String, String> allSessionResult = adminServiceImpl.sessionManagement();
+    	return null;
     }
 	
 }

@@ -6,15 +6,33 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 	
+	// Session 이벤트 모니터링
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+	
+	// SessionRegistry를 사용하여 현재 활성화된 세션을 추적 ( 세션 정보도 얻을 수 있다. )
+    // HttpSessionEventPublisher이게 있어야 사용 가능하다.
+    // HttpSessionEventPublisher를 통해 세션 생성 및 파기 이벤트를 추척하고 sessionRegistry()에 전달한다.
+//    @Bean
+//    public SessionRegistry sessionRegistry() {
+//        return new SessionRegistryImpl();
+//    }
+	
+    // 권한 계층화
 	@Bean
 	public RoleHierarchy roleHierarchy() {
 		RoleHierarchyImpl roleHierarchyImpl = new RoleHierarchyImpl();
@@ -35,13 +53,26 @@ public class SecurityConfig {
 				// 장점 : 가독성에 좋다.
 				auth.requestMatchers("/info/**").hasAnyRole("A");
 				auth.requestMatchers("/taking/**").hasAnyRole("B");
+				auth.requestMatchers("/get/allsession").hasRole("B");
 				auth.requestMatchers("/admin").hasRole("C");
 				auth.anyRequest().authenticated();
 			});
 		
 		http.formLogin(form -> form.disable());
 		
-		http.csrf(csrf -> csrf.disable());
+//		http.csrf(csrf -> csrf.disable());
+		
+		// csrf 토큰을 쿠키로 전달할것이고 /login/**, /join, /에는 csrf토큰이 없어도 된다는 설정이다.
+		// withHttpOnlyFalse()를 설정하면 Http에서 쿠키로 해당 토큰을 볼 수 있게 되는데 이는 보안상 좋지 못하기 때문에 배포시 설정하지 않는다.
+		http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).ignoringRequestMatchers("/login/**", "/join", "/"));
+		
+		// 세션 생성 정책
+		// - 기본적으로 토큰 인증 기반과 RESTful API 환경에서는 STATELESS를 선택한다.
+		// - IF_REQUIRED : 필요한 경우에만 세션을 생성
+		// - ALWAYS : 모든 요청에 대해 새로운 세션 생성 [오버헤드 증가..]
+		// - NEVER : 절대 세션을 생성하지 않겠다.
+		// - STATELESS : 세션을 비활성화 하겠다.
+		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 		
 		// 중복 로그인을 처리하는 sessionManagement
 		// maximumSession(n) -> 몇개까지 한번에 로그인 할것인가?
@@ -59,6 +90,9 @@ public class SecurityConfig {
 		// 2. newSession() : 로그인시 세션 새로 생성
 		// 3. changeSessionId() : 로그인시 동일한 세션에 대한 Id 변경 [🎉]
 		http.sessionManagement(session -> session.sessionFixation(sessionFixation -> sessionFixation.changeSessionId()));
+		
+		// 세션 만료시 리다이렉트할 페이지 설정
+		// http.sessionManagement(session -> session.invalidSessionUrl("/"));
 		
 		return http.build();
 	}
