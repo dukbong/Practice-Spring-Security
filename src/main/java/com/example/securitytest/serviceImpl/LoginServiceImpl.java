@@ -1,5 +1,9 @@
 package com.example.securitytest.serviceImpl;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,8 +31,7 @@ public class LoginServiceImpl implements LoginService {
 	public void loginProcess(LoginDTO loginDTO) {
 		log.info("LoginServiceImpl - loginProcess()");
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassWord());
-		// authenticate() 메소드 실행 시 UserDetailsService의 loadByUsername이 실행된다.
-		// Authentication 객체는 UserDetails로 형변환이 가능하다.
+		// authenticate() 메소드 실행 시 UserDetailsService의 loadByUsername이 실행된다. [Default]
 		// 실제 검증이 발생하는 단계이다.
 		Authentication auth = authenticationManager.authenticate(authToken);
 		SecurityContextHolder.getContext().setAuthentication(auth);
@@ -36,12 +39,15 @@ public class LoginServiceImpl implements LoginService {
 		httpSession.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 	}
 
+	// Custom
 	@Override
 	public void loginProcess(String url, LoginDTO loginDTO) {
 		log.info("LoginServiceImpl - loginProcess()");
 		// UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassWord());
 		CustomToken authToken = new CustomToken(loginDTO.getUserName(), loginDTO.getPassWord());
-		authToken.setDetails(url);
+		Map<String, Object> detail = new HashMap<>();
+		detail.put("url", url);
+		authToken.setDetails(detail);
 		Authentication auth = authenticationManager.authenticate(authToken);
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		httpSession.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());

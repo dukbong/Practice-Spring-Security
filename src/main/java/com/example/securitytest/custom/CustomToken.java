@@ -16,7 +16,7 @@ public class CustomToken extends UsernamePasswordAuthenticationToken {
 	public CustomToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
 		super(principal, credentials, authorities);
 		this.startTime = LocalDateTime.now();
-		log.info("1 : " + startTime);
+		log.info("Login time : " + startTime);
 	}
 	
 	

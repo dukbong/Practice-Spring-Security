@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CustomUserDetailsServiceImpl implements CustomUserDetailsService{
+public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 	
 	private final UserEntityRepository userEntityRepository;
 
