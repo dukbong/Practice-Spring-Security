@@ -45,6 +45,8 @@ public class LoginServiceImpl implements LoginService {
 		log.info("LoginServiceImpl - loginProcess()");
 		// UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.getUserName(), loginDTO.getPassWord());
 		CustomToken authToken = new CustomToken(loginDTO.getUserName(), loginDTO.getPassWord());
+		
+		// Map으로 Details를 세팅함으로써 최종적으로 다양한 정보를 SecurityContextHolder에서 볼 수 있다.
 		Map<String, Object> detail = new HashMap<>();
 		detail.put("url", url);
 		authToken.setDetails(detail);
