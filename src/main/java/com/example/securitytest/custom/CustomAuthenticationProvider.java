@@ -28,9 +28,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = authentication.getName();
 		String password = (String) authentication.getCredentials();
-		Map<String, Object> detail = (Map<String, Object>) authentication.getDetails(); 
+		Map<String, String> info = (Map<String, String>) authentication.getDetails(); 
 
-		UserDetails userDetails = customAddUrlUserDetailsService.loadUserByUsernameAndUrl(username, (String)detail.get("url"));
+		UserDetails userDetails = customAddUrlUserDetailsService.loadUserByUsernameAndUrl(username, info);
         
 		if (!bCryptPasswordEncoder.matches(password, userDetails.getPassword())) {
 			throw new BadCredentialsException("유효하지 않은 비밀번호 입니다!!");
@@ -38,8 +38,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         
 		// Url 로직 추가 예정
         
+		// 커스텀 전
 		// return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
-		return new CustomToken(username, password, userDetails.getAuthorities());
+		// 커스텀 후
+		// return new CustomToken(username, password, userDetails.getAuthorities());
+		// Principal에 userDetails 넣기
+		return new CustomToken(userDetails, password, userDetails.getAuthorities());
 	}
 
 	@Override

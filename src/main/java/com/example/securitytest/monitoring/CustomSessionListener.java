@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpSessionListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+// 고민중....
+
+// HttpSessionEventPublisher에 의한 이벤트 
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -18,22 +21,18 @@ public class CustomSessionListener implements HttpSessionListener  {
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        System.out.println("Session Created: " + se.getSession().getId());
-        log.info("세션 생성 : {}", se.getSession().getId());
+        log.info("세션 이벤트 모니터링 - 생성 : {}", se.getSession().getId());
         
-        // 로그인 성공시 뭘 할것인지 정할 수 있다.
+        // 세션이 생기는데 이게 인증된 사용자가 아닐 경우 세션을 지워야 한다.
+        // 이유는 각 사용자별로 하나의 세션만 갖을 수 있게 설정했기 때문이다.
         
-        // 아직 모름
         sessionRegistry.registerNewSession(se.getSession().getId(), SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-    	log.info("세션 파기 : {}", se.getSession().getId());
-    	
-        // 로그인 실패시 뭘 할것인지 정할 수 있다.
+    	log.info("세션 이벤트 모니터링 - 파기 : {}", se.getSession().getId());
         
-        // 아직 모름
         sessionRegistry.removeSessionInformation(se.getSession().getId());
     }
 	

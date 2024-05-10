@@ -8,6 +8,8 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.example.securitytest.custom.CustomToken;
+import com.example.securitytest.dto.CustomUserDetails;
 import com.example.securitytest.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,19 +27,19 @@ public class AdminServiceImpl implements AdminService {
         log.info("sessionManagement");
 
         List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
-        log.info("allPrincipals size = {}", allPrincipals.size());
+        log.info("활성 세션 수 [세션이 존재하는 사용자 수] = {}", allPrincipals.size());
         
-        for(Object principal : allPrincipals) {
-        	List<SessionInformation> test = sessionRegistry.getAllSessions(principal, false);
-        	log.info("test size=  {}", test.size());
-        	
-        }
-        // 각 Principal(사용자)에 대한 세션 정보를 가져옵니다.
         for (Object principal : allPrincipals) {
-            if (principal instanceof UserDetails) {
-                UserDetails userDetails = (UserDetails) principal;
-                List<SessionInformation> sessions = sessionRegistry.getAllSessions(userDetails, false);
-                sessions.stream().forEach(s-> log.info(userDetails.getUsername()+" : "+ s.getSessionId()));
+            if (principal instanceof CustomUserDetails detail) {
+                detail = (CustomUserDetails) principal;
+                List<SessionInformation> sessions = sessionRegistry.getAllSessions(detail, false);
+                for(SessionInformation info : sessions) {
+                	log.info("활성 유저 정보");
+                	log.info("session id = {}", info.getSessionId());
+                	log.info("user id = {}", detail.getUsername());
+                	log.info("user accessUrl = {}", detail.getInfo().get("url"));
+                	log.info("user loginTime = {}", detail.getInfo().get("loginTime"));
+                }
             }
         }
         

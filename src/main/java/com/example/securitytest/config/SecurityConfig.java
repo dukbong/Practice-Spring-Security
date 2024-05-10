@@ -23,13 +23,8 @@ public class SecurityConfig {
         return new HttpSessionEventPublisher();
     }
     
-    // SessionRegistry에 등록해주는 역할 [모르겠음]
-//    @Bean
-//    public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-//        return new RegisterSessionAuthenticationStrategy(sessionRegistry());
-//    }
 	
-	// SessionRegistry를 사용하여 현재 활성화된 세션을 추적 ( 세션 정보도 얻을 수 있다. ) [모르겠음]
+	// SessionRegistry를 사용하여 현재 활성화된 세션을 추적 ( 세션 정보도 얻을 수 있다. )
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
@@ -54,8 +49,7 @@ public class SecurityConfig {
 				
 				// RoleHierarchy를 Bean 등록하면 이런식으로 줄여서 사용이 가능하다.
 				// 장점 : 가독성에 좋다.
-				auth.requestMatchers("/info/**").hasAnyRole("A");
-				auth.requestMatchers("/taking/**").hasAnyRole("B");
+				auth.requestMatchers("/info").hasAnyRole("A");
 				auth.requestMatchers("/get/allsession").hasRole("B");
 				auth.requestMatchers("/admin").hasRole("C");
 				auth.anyRequest().authenticated();

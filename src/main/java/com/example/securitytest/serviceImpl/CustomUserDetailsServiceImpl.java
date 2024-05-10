@@ -1,5 +1,7 @@
 package com.example.securitytest.serviceImpl;
 
+import java.util.Map;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -31,13 +33,13 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsernameAndUrl(String username, String url) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsernameAndUrl(String username, Map<String, String> info) throws UsernameNotFoundException {
 		log.info("CustomAddUrlUserDetailsService - loadUserByUsernameAndUrl()");
-		UserEntity findUserEntity = userEntityRepository.findByUserNameAndAccessUrl(username, url).orElseThrow(() -> new IllegalArgumentException("Not Found User"));
+		UserEntity findUserEntity = userEntityRepository.findByUserNameAndAccessUrl(username, info.get("url")).orElseThrow(() -> new IllegalArgumentException("Not Found User"));
 		return new CustomUserDetails(LoginProcessDTO.builder().userName(username)
 															  .passWord(findUserEntity.getPassWord())
 															  .role(findUserEntity.getRole())
-															  .accessUrl(url)
+															  .info(info)
 															  .build());
 	}
 

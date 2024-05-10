@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.securitytest.custom.CustomToken;
+import com.example.securitytest.dto.CustomUserDetails;
 import com.example.securitytest.dto.LoginDTO;
 import com.example.securitytest.service.LoginService;
 
@@ -49,8 +50,13 @@ public class LoginServiceImpl implements LoginService {
 		// Map으로 Details를 세팅함으로써 최종적으로 다양한 정보를 SecurityContextHolder에서 볼 수 있다.
 		Map<String, Object> detail = new HashMap<>();
 		detail.put("url", url);
+		detail.put("test", "원하는 정보는 무엇이든 넣을 수 있다.");
 		authToken.setDetails(detail);
 		Authentication auth = authenticationManager.authenticate(authToken);
+		Object obj = auth.getPrincipal();
+		if(obj instanceof CustomUserDetails customUser) {
+			customUser.setInfo("loginTime", LocalDateTime.now().toString());
+		}
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		httpSession.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 	}

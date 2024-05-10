@@ -2,6 +2,7 @@ package com.example.securitytest.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,8 +15,6 @@ public class CustomUserDetails implements UserDetails{
 	private LoginProcessDTO loginProcessDTO;
 	
 	public CustomUserDetails(LoginProcessDTO loginProcessDTO) {
-		log.info("CustomUserDetails - constructor / password = {}", loginProcessDTO.getPassWord());
-		
 		this.loginProcessDTO = loginProcessDTO;
 	}
 
@@ -41,10 +40,14 @@ public class CustomUserDetails implements UserDetails{
 		return loginProcessDTO.getUserName();
 	}
 	
-	public String getUrl() {
-		return loginProcessDTO.getAccessUrl();
+	public Map<String, String> getInfo() {
+		return loginProcessDTO.getInfo();
 	}
-
+	
+	public void setInfo(String key, String value) {
+		loginProcessDTO.getInfo().put(key, value);
+	}
+	
 	@Override
 	public boolean isAccountNonExpired() {
 		// 계정 만료 확인
