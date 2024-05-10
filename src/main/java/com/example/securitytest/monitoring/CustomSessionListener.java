@@ -1,5 +1,7 @@
-package com.example.securitytest.serviceImpl;
+package com.example.securitytest.monitoring;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpSessionEvent;
@@ -12,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CustomSessionListener implements HttpSessionListener  {
 	
-	// private final SessionRegistry sessionRegistry;
+	 private final SessionRegistry sessionRegistry;
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
@@ -22,7 +24,7 @@ public class CustomSessionListener implements HttpSessionListener  {
         // 로그인 성공시 뭘 할것인지 정할 수 있다.
         
         // 아직 모름
-        // sessionRegistry.registerNewSession(se.getSession().getId(), se.getSession().getAttribute("principal"));
+        sessionRegistry.registerNewSession(se.getSession().getId(), SecurityContextHolder.getContext().getAuthentication().getPrincipal());
     }
 
     @Override
@@ -32,7 +34,7 @@ public class CustomSessionListener implements HttpSessionListener  {
         // 로그인 실패시 뭘 할것인지 정할 수 있다.
         
         // 아직 모름
-        //sessionRegistry.removeSessionInformation(se.getSession().getId());
+        sessionRegistry.removeSessionInformation(se.getSession().getId());
     }
 	
 }

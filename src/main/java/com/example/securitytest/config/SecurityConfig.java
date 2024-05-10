@@ -11,7 +11,6 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
@@ -23,14 +22,18 @@ public class SecurityConfig {
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
-	
-	// SessionRegistry를 사용하여 현재 활성화된 세션을 추적 ( 세션 정보도 얻을 수 있다. )
-    // HttpSessionEventPublisher이게 있어야 사용 가능하다.
-    // HttpSessionEventPublisher를 통해 세션 생성 및 파기 이벤트를 추척하고 sessionRegistry()에 전달한다.
+    
+    // SessionRegistry에 등록해주는 역할 [모르겠음]
 //    @Bean
-//    public SessionRegistry sessionRegistry() {
-//        return new SessionRegistryImpl();
+//    public SessionAuthenticationStrategy sessionAuthenticationStrategy() {
+//        return new RegisterSessionAuthenticationStrategy(sessionRegistry());
 //    }
+	
+	// SessionRegistry를 사용하여 현재 활성화된 세션을 추적 ( 세션 정보도 얻을 수 있다. ) [모르겠음]
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 	
     // 권한 계층화
 	@Bean
@@ -60,11 +63,11 @@ public class SecurityConfig {
 		
 		http.formLogin(form -> form.disable());
 		
-//		http.csrf(csrf -> csrf.disable());
+		http.csrf(csrf -> csrf.disable());
 		
 		// csrf 토큰을 쿠키로 전달할것이고 /login/**, /join, /에는 csrf토큰이 없어도 된다는 설정이다.
 		// withHttpOnlyFalse()를 설정하면 Http에서 쿠키로 해당 토큰을 볼 수 있게 되는데 이는 보안상 좋지 못하기 때문에 배포시 설정하지 않는다.
-		http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).ignoringRequestMatchers("/login/**", "/join", "/"));
+		// http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).ignoringRequestMatchers("/login/**", "/join", "/"));
 		
 		// 세션 생성 정책
 		// - 기본적으로 토큰 인증 기반과 RESTful API 환경에서는 STATELESS를 선택한다.
@@ -74,14 +77,19 @@ public class SecurityConfig {
 		// - STATELESS : 세션을 비활성화 하겠다.
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 		
+		
+		
 		// 중복 로그인을 처리하는 sessionManagement
 		// maximumSession(n) -> 몇개까지 한번에 로그인 할것인가?
 		// maxSessionsPreventsLogin -> 만약 maximumSession 갯수 초과 후 로그인 시도시 어떻게 막을것인가?
 		//							   [true  : 새롭게 로그인 시도한 것을 막겠다.]
 		//							   [false : 기존 로그인 중 하나를 취소시키고 새로운 로그인을 통과시킨다. ]
 		http.sessionManagement(session -> session.maximumSessions(1)
-												 .maxSessionsPreventsLogin(true));
-		
+												 .maxSessionsPreventsLogin(true)
+//												 [모르겠음]
+												 .sessionRegistry(sessionRegistry())
+												 );
+		 
 		// 세션 고정 보호
 		// 세션 고정은 웹의 보안 취약점 중 하나이며 특정 세션 ID를 훔치거나 해킹하는 공격
 		// spring-security에서는 sessionManagement에서 sessionFixation()를 통해 이를 보호할 방법을 설정할 수 있다.
@@ -90,6 +98,9 @@ public class SecurityConfig {
 		// 2. newSession() : 로그인시 세션 새로 생성
 		// 3. changeSessionId() : 로그인시 동일한 세션에 대한 Id 변경 [🎉]
 		http.sessionManagement(session -> session.sessionFixation(sessionFixation -> sessionFixation.changeSessionId()));
+		
+		// 인증 성공 후 세션이 생성되거나 변경될 때 SessionRegistry에 세션 정보를 등록합니다. [모르겠음]
+//		http.sessionManagement(session -> session.sessionAuthenticationStrategy(sessionAuthenticationStrategy()));
 		
 		// 세션 만료시 리다이렉트할 페이지 설정
 		// http.sessionManagement(session -> session.invalidSessionUrl("/"));
