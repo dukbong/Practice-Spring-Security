@@ -1,4 +1,4 @@
-package com.example.securitytest.custom.interfaces;
+package com.example.securitytest.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

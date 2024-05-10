@@ -4,11 +4,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.securitytest.custom.interfaces.CustomUserDetailsService;
 import com.example.securitytest.dto.CustomUserDetails;
 import com.example.securitytest.dto.LoginProcessDTO;
 import com.example.securitytest.entity.UserEntity;
 import com.example.securitytest.repository.UserEntityRepository;
+import com.example.securitytest.service.CustomUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CustomAddUrlUserDetailsService implements CustomUserDetailsService {
+public class CustomUserDetailsServiceImpl implements CustomUserDetailsService{
 	
 	private final UserEntityRepository userEntityRepository;
 

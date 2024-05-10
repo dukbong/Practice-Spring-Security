@@ -2,6 +2,8 @@ package com.example.securitytest.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,8 +13,14 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
+	
+	@Bean
+	public RoleHierarchy roleHierarchy() {
+		RoleHierarchyImpl roleHierarchyImpl = new RoleHierarchyImpl();
+		roleHierarchyImpl.setHierarchy("ROLE_C > ROLE_B > ROLE_A");
+		return roleHierarchyImpl;
+	}
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
