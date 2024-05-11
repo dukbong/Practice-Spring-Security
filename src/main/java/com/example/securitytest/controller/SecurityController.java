@@ -21,6 +21,7 @@ import com.example.securitytest.service.AdminService;
 import com.example.securitytest.service.JoinService;
 import com.example.securitytest.service.LoginService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,8 +40,12 @@ public class SecurityController {
 	}
 	
 	@PostMapping("/login/{url}")
-	public ResponseEntity<LoginDTO> loginProcess(@PathVariable("url") String url, @RequestBody LoginDTO loginDTO) {
-		loginServiceImpl.loginProcess(url, loginDTO);
+	public ResponseEntity<LoginDTO> loginProcess(@PathVariable("url") String url, @RequestBody LoginDTO loginDTO, HttpSession session) {
+		try {
+			loginServiceImpl.loginProcess(url, loginDTO);
+		} catch (Exception e) {
+			session.invalidate();
+		}
 		return ResponseEntity.ok().body(loginDTO);
 	}
 	
