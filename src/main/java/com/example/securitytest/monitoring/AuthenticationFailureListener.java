@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 // 인증 실패시 동작한다. (AuthenticationFailureBadCredentialsEvent 이거 때문이다.)
 @Component
 @Slf4j
-public class LoginFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
+public class AuthenticationFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
 
     @Override
     public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {

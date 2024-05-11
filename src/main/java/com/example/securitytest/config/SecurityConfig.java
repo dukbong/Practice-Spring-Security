@@ -10,10 +10,14 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-import com.example.securitytest.monitoring.CustomLogoutSuccessHandler;
+import com.example.securitytest.handler.CustomAccessDeniedHandler;
+import com.example.securitytest.handler.CustomAuthenticationEntryPoint;
+import com.example.securitytest.handler.CustomLogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +29,15 @@ public class SecurityConfig {
         return new HttpSessionEventPublisher();
     }
     
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
+    }
+    
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
 	
 	// SessionRegistry를 사용하여 현재 활성화된 세션을 추적 ( 세션 정보도 얻을 수 있다. )
     @Bean
@@ -56,6 +69,9 @@ public class SecurityConfig {
 				auth.requestMatchers("/admin").hasRole("C");
 				auth.anyRequest().authenticated();
 			});
+		
+		http.exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler())
+									   .authenticationEntryPoint(authenticationEntryPoint()));
 		
 		http.formLogin(form -> form.disable());
 		
