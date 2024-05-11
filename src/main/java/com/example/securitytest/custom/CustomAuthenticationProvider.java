@@ -28,6 +28,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = authentication.getName();
 		String password = (String) authentication.getCredentials();
+		@SuppressWarnings("unchecked")
 		Map<String, String> info = (Map<String, String>) authentication.getDetails(); 
 
 		UserDetails userDetails = customAddUrlUserDetailsService.loadUserByUsernameAndUrl(username, info);

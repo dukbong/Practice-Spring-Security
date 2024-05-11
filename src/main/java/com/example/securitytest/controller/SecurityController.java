@@ -1,9 +1,12 @@
 package com.example.securitytest.controller;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.securitytest.custom.CustomToken;
 import com.example.securitytest.dto.CustomUserDetails;
 import com.example.securitytest.dto.JoinDTO;
 import com.example.securitytest.dto.LoginDTO;
@@ -53,10 +55,10 @@ public class SecurityController {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     	Object ob = auth.getPrincipal();
     	if(ob instanceof CustomUserDetails detail) {
-    		log.info("UserDetails 변환 성공");
     		log.info("userDetail - username    = {}", detail.getUsername());
     		log.info("userDetail - password    = {}", detail.getPassword());
-    		log.info("userDetail - authorities = {}", detail.getAuthorities());
+    		List<String> list =  detail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+    		log.info("userDetail - authorities = {}", list);
     		log.info("userDetail - url         = {}", detail.getInfo().get("url"));
     		log.info("userDetail - test        = {}", detail.getInfo().get("test"));
     	}
@@ -64,9 +66,9 @@ public class SecurityController {
     }
     
     @GetMapping("/get/allsession")
-    public ResponseEntity<Map<String, String>> allSession() {
-    	Map<String, String> allSessionResult = adminServiceImpl.sessionManagement();
+    public ResponseEntity<Map<String, Map<String, String>>> allSession() {
+    	Map<String, Map<String, String>> allSessionResult = adminServiceImpl.sessionManagement();
     	return null;
     }
-	
+    
 }

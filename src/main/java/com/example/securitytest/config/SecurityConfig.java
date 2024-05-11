@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
+import com.example.securitytest.monitoring.CustomLogoutSuccessHandler;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -57,6 +59,11 @@ public class SecurityConfig {
 		
 		http.formLogin(form -> form.disable());
 		
+		http.logout(logout -> logout.logoutUrl("/logout")
+									.invalidateHttpSession(true)
+									.deleteCookies("JSESSIONID")
+									.logoutSuccessHandler(new CustomLogoutSuccessHandler()));
+		
 		http.csrf(csrf -> csrf.disable());
 		
 		// csrf 토큰을 쿠키로 전달할것이고 /login/**, /join, /에는 csrf토큰이 없어도 된다는 설정이다.
@@ -80,9 +87,7 @@ public class SecurityConfig {
 		//							   [false : 기존 로그인 중 하나를 취소시키고 새로운 로그인을 통과시킨다. ]
 		http.sessionManagement(session -> session.maximumSessions(1)
 												 .maxSessionsPreventsLogin(true)
-//												 [모르겠음]
-												 .sessionRegistry(sessionRegistry())
-												 );
+												 .sessionRegistry(sessionRegistry()));
 		 
 		// 세션 고정 보호
 		// 세션 고정은 웹의 보안 취약점 중 하나이며 특정 세션 ID를 훔치거나 해킹하는 공격

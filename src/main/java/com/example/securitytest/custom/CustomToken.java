@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+// 현재 실질적으로 필요는 없다.
 public class CustomToken extends UsernamePasswordAuthenticationToken {
 	
 	private final LocalDateTime startTime;

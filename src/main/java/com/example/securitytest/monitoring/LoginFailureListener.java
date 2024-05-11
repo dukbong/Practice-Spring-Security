@@ -5,6 +5,7 @@ import org.springframework.security.authentication.event.AuthenticationFailureBa
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionEvent;
 import lombok.extern.slf4j.Slf4j;
 
 // HttpSessionEventPublisher 보다 먼저 실행된다.
@@ -21,4 +22,5 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
         Throwable failureCause = event.getException();
         log.error("실패 원인 : {}", failureCause.getMessage());
     }
+    
 }

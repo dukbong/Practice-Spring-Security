@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface AdminService {
 
-	Map<String, String> sessionManagement();
+	Map<String, Map<String, String>> sessionManagement();
 
 }
