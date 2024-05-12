@@ -76,4 +76,10 @@ public class SecurityController {
     	return ResponseEntity.ok().body(activeSessions);
     }
     
+    @GetMapping("/delete/session/c")
+    public ResponseEntity<String> invalidateAllSessions() {
+    	adminServiceImpl.expireSessionsWithoutRoleC();
+    	return ResponseEntity.ok().body("모든 활성화 세션을 종료시킵니다.");
+    }
+    
 }

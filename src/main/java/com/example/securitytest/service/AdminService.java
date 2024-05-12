@@ -6,5 +6,7 @@ import java.util.Map;
 public interface AdminService {
 
 	List<Map<String, Object>> sessionManagement();
+	
+	void expireSessionsWithoutRoleC();
 
 }

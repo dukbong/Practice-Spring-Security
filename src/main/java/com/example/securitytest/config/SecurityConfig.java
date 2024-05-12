@@ -14,14 +14,22 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
 import com.example.securitytest.handler.CustomAccessDeniedHandler;
 import com.example.securitytest.handler.CustomAuthenticationEntryPoint;
 import com.example.securitytest.handler.CustomLogoutSuccessHandler;
+import com.example.securitytest.handler.CustomSessionExpiredStrategy;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+	
+	// session 만료 시 발생
+    @Bean
+    public SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
+        return new CustomSessionExpiredStrategy();
+    }
 	
 	// Session 이벤트 모니터링
     @Bean
@@ -68,6 +76,7 @@ public class SecurityConfig {
 				// 장점 : 가독성에 좋다.
 				auth.requestMatchers("/info").hasAnyRole("A");
 				auth.requestMatchers("/get/allsession").hasRole("B");
+				auth.requestMatchers("/delete/session/c").hasRole("B");
 				auth.requestMatchers("/admin").hasRole("C");
 				auth.anyRequest().authenticated();
 			});
@@ -105,7 +114,8 @@ public class SecurityConfig {
 		//							   [false : 기존 로그인 중 하나를 취소시키고 새로운 로그인을 통과시킨다. ]
 		http.sessionManagement(session -> session.maximumSessions(1)
 												 .maxSessionsPreventsLogin(true)
-												 .sessionRegistry(sessionRegistry()));
+												 .sessionRegistry(sessionRegistry())
+												 .expiredSessionStrategy(sessionInformationExpiredStrategy()));
 		 
 		// 세션 고정 보호
 		// 세션 고정은 웹의 보안 취약점 중 하나이며 특정 세션 ID를 훔치거나 해킹하는 공격
