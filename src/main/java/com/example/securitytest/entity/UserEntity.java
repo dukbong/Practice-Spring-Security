@@ -1,6 +1,7 @@
 package com.example.securitytest.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,9 @@ public class UserEntity {
 	@Id
 	@GeneratedValue(generator = "user_gen", strategy = GenerationType.SEQUENCE)
 	private Long id;
+	
+//	@EmbeddedId
+//	UserEntityId id;
 	
 	@Column(unique = true)
 	private String userName;
