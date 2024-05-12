@@ -60,12 +60,13 @@ public class SecurityController {
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     	Object ob = auth.getPrincipal();
     	if(ob instanceof CustomUserDetails detail) {
-    		log.info("userDetail - username    = {}", detail.getUsername());
-    		log.info("userDetail - password    = {}", detail.getPassword());
+    		log.info("info - username    = {}", detail.getUsername());
+    		log.info("info - password    = {}", detail.getPassword());
     		List<String> list =  detail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-    		log.info("userDetail - authorities = {}", list);
-    		log.info("userDetail - url         = {}", detail.getInfo().get("url"));
-    		log.info("userDetail - test        = {}", detail.getInfo().get("test"));
+    		log.info("info - authorities = {}", list);
+    		log.info("info - url         = {}", detail.getInfo().get("url"));
+    		log.info("info - test        = {}", detail.getInfo().get("test"));
+    		log.info("info - loginTime   = {}", detail.getLoginTime());
     	}
     	return ResponseEntity.ok().body("taking Page");
     }

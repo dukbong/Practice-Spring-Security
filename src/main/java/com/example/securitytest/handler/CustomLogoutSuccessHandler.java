@@ -30,6 +30,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 		log.info("logout user authority = {}", authority);
 		log.info("logout user url = {}", detail.getInfo().get("url"));
 		log.info("logout user test = {}", detail.getInfo().get("test"));
+		log.info("logout user loginTime = {}", detail.getLoginTime());
 		log.info("logout time = {}", LocalDateTime.now());
 	}
 

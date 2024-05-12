@@ -1,5 +1,6 @@
 package com.example.securitytest.serviceImpl;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,13 +34,14 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsernameAndUrl(String username, Map<String, String> info) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsernameAndUrl(String username, Map<String, String> info, LocalDateTime StartTime) throws UsernameNotFoundException {
 		log.info("CustomAddUrlUserDetailsService - loadUserByUsernameAndUrl()");
 		UserEntity findUserEntity = userEntityRepository.findByUserNameAndAccessUrl(username, info.get("url")).orElseThrow(() -> new IllegalArgumentException("Not Found User"));
 		return new CustomUserDetails(LoginProcessDTO.builder().userName(username)
 															  .passWord(findUserEntity.getPassWord())
 															  .role(findUserEntity.getRole())
 															  .info(info)
+															  .loginTime(StartTime)
 															  .build());
 	}
 

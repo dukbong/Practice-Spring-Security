@@ -47,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
 					sessionInfo.put("sessionId", info.getSessionId());
 					sessionInfo.put("userName", detail.getUsername());
 					sessionInfo.put("accessUrl", detail.getInfo().get("url"));
-					sessionInfo.put("loginTime", detail.getInfo().get("loginTime"));
+					sessionInfo.put("loginTime", detail.getLoginTime());
 					sessionInfo.put("authorities", authorities);
 
 					activeSessions.add(sessionInfo);
@@ -56,7 +56,7 @@ public class AdminServiceImpl implements AdminService {
 					log.info("session id = {}", info.getSessionId());
 					log.info("user id = {}", detail.getUsername());
 					log.info("user accessUrl = {}", detail.getInfo().get("url"));
-					log.info("user loginTime = {}", detail.getInfo().get("loginTime"));
+					log.info("user loginTime = {}", detail.getLoginTime());
 					log.info("user authorities = {}", authorities);
 				}
 			}

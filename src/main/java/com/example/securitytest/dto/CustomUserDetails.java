@@ -1,5 +1,6 @@
 package com.example.securitytest.dto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -38,6 +39,10 @@ public class CustomUserDetails implements UserDetails{
 	@Override
 	public String getUsername() {
 		return loginProcessDTO.getUserName();
+	}
+	
+	public LocalDateTime getLoginTime() {
+		return loginProcessDTO.getLoginTime();
 	}
 	
 	public Map<String, String> getInfo() {

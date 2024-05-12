@@ -1,5 +1,6 @@
 package com.example.securitytest.serviceImpl;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,9 +73,9 @@ public class LoginServiceImpl implements LoginService {
 		log.info("LoginServiceImpl - loginProcess()");
 		CustomToken authToken = createAuthToken(url, loginDTO);
 		Authentication auth = authenticateUser(authToken);
-		updateAuthenticationContext(auth);
-		updateHttpSession();
-		registerSession();
+		insertAuthenticationContext(auth);
+		insertHttpSession();
+		insertSessionRegister();
 	}
 	
 	private CustomToken createAuthToken(String url, LoginDTO loginDTO) {
@@ -90,15 +91,15 @@ public class LoginServiceImpl implements LoginService {
 		return authenticationManager.authenticate(authToken);
 	}
 
-	private void updateAuthenticationContext(Authentication auth) {
+	private void insertAuthenticationContext(Authentication auth) {
 		SecurityContextHolder.getContext().setAuthentication(auth);
 	}
 
-	private void updateHttpSession() {
+	private void insertHttpSession() {
 		httpSession.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 	}
 
-	private void registerSession() {
+	private void insertSessionRegister() {
 		sessionRegistry.registerNewSession(httpSession.getId(), SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 	}
 
