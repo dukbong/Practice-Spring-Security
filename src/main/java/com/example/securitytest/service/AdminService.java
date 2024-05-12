@@ -9,4 +9,6 @@ public interface AdminService {
 	
 	void expireSessionsWithoutRoleC();
 
+	void expireSessionByUsername(String username);
+
 }

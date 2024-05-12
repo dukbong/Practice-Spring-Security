@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.example.securitytest.dto.CustomUserDetails;
@@ -83,6 +84,22 @@ public class AdminServiceImpl implements AdminService {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void expireSessionByUsername(String username) {
+	    List<Object> principals = sessionRegistry.getAllPrincipals();
+	    for (Object principal : principals) {
+	        if (principal instanceof CustomUserDetails detail) {
+	        	detail = (CustomUserDetails) principal;
+	            if (detail.getUsername().equals(username)) {
+	                List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
+	                for (SessionInformation session : sessions) {
+	                    session.expireNow();
+	                }
+	            }
+	        }
+	    }
 	}
 
 }
