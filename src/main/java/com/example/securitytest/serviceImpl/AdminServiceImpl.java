@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.example.securitytest.dto.CustomUserDetails;
 import com.example.securitytest.service.AdminService;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

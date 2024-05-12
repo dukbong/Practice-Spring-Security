@@ -76,6 +76,7 @@ public class LoginServiceImpl implements LoginService {
 		updateHttpSession();
 		registerSession();
 	}
+	
 	private CustomToken createAuthToken(String url, LoginDTO loginDTO) {
 		CustomToken authToken = new CustomToken(loginDTO.getUserName(), loginDTO.getPassWord());
 		Map<String, Object> detail = new HashMap<>();

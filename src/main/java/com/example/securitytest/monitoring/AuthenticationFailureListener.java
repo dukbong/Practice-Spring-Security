@@ -4,8 +4,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionEvent;
 import lombok.extern.slf4j.Slf4j;
 
 // HttpSessionEventPublisher 보다 먼저 실행된다.

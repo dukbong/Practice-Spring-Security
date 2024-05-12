@@ -114,7 +114,9 @@ public class SecurityConfig {
 		//							   [false : 기존 로그인 중 하나를 취소시키고 새로운 로그인을 통과시킨다. ]
 		http.sessionManagement(session -> session.maximumSessions(1)
 												 .maxSessionsPreventsLogin(true)
+												 // sessionRegistry 관리
 												 .sessionRegistry(sessionRegistry())
+												 // 세션 만료시 처리
 												 .expiredSessionStrategy(sessionInformationExpiredStrategy()));
 		 
 		// 세션 고정 보호
