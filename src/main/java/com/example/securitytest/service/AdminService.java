@@ -1,9 +1,10 @@
 package com.example.securitytest.service;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AdminService {
 
-	Map<String, Map<String, String>> sessionManagement();
+	List<Map<String, Object>> sessionManagement();
 
 }

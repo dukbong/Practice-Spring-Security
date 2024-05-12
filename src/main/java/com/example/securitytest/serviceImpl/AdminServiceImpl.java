@@ -1,5 +1,6 @@
 package com.example.securitytest.serviceImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,29 +25,42 @@ public class AdminServiceImpl implements AdminService {
 	private final SessionRegistry sessionRegistry;
 	
     @Override
-    public Map<String, Map<String, String>> sessionManagement() {
+    public List<Map<String, Object>> sessionManagement() {
         log.info("sessionManagement");
+        
+        List<Map<String, Object>> activeSessions = new ArrayList<>();
         
         List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
         log.info("활성 세션 수 [세션이 존재하는 사용자 수] = {}", allPrincipals.size());
         
         for (Object principal : allPrincipals) {
+        	log.info("test = {}", principal);
             if (principal instanceof CustomUserDetails detail) {
-                detail = (CustomUserDetails) principal;
+            	detail = (CustomUserDetails) principal;
                 List<SessionInformation> sessions = sessionRegistry.getAllSessions(detail, false);
                 for(SessionInformation info : sessions) {
+                	List<String> authorities = detail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+                	
+                	Map<String, Object> sessionInfo = new HashMap<>();
+                	sessionInfo.put("sessionId", info.getSessionId());
+                	sessionInfo.put("userName", detail.getUsername());
+                	sessionInfo.put("accessUrl", detail.getInfo().get("url"));
+                	sessionInfo.put("loginTime", detail.getInfo().get("loginTime"));
+                	sessionInfo.put("authorities", authorities);
+                	
+                	activeSessions.add(sessionInfo);
+                	
                 	log.info("활성 유저 정보");
                 	log.info("session id = {}", info.getSessionId());
                 	log.info("user id = {}", detail.getUsername());
                 	log.info("user accessUrl = {}", detail.getInfo().get("url"));
                 	log.info("user loginTime = {}", detail.getInfo().get("loginTime"));
-                	List<String> authorities = detail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
                 	log.info("user authorities = {}", authorities);
                 }
             }
         }
         
-        return null;
+        return activeSessions;
     }
 
 }

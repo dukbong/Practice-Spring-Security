@@ -29,11 +29,13 @@ public class SecurityConfig {
         return new HttpSessionEventPublisher();
     }
     
+    // 권한 핸들러
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
         return new CustomAccessDeniedHandler();
     }
     
+    // 인증 핸들러
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new CustomAuthenticationEntryPoint();

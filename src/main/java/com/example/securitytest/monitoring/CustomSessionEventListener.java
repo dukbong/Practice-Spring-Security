@@ -1,10 +1,10 @@
-package com.example.securitytest.monitoring;
+	package com.example.securitytest.monitoring;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Component;
 
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +21,12 @@ public class CustomSessionEventListener implements HttpSessionListener  {
     @Override
     public void sessionCreated(HttpSessionEvent se) {
         log.info("세션 이벤트 모니터링 - 생성 : {}", se.getSession().getId());
-        
-        if(SecurityContextHolder.getContext().getAuthentication() == null) {
-        	return;
-        }
-        
-       	sessionRegistry.registerNewSession(se.getSession().getId(), SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        log.info("SessionRegistry에 저장하는 것을 LoginProcess 메소드에서 진행할 것이다.");
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
     	log.info("세션 이벤트 모니터링 - 파기 : {}", se.getSession().getId());
-    	
         sessionRegistry.removeSessionInformation(se.getSession().getId());
     }
     

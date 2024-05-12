@@ -71,9 +71,9 @@ public class SecurityController {
     }
     
     @GetMapping("/get/allsession")
-    public ResponseEntity<Map<String, Map<String, String>>> allSession() {
-    	Map<String, Map<String, String>> allSessionResult = adminServiceImpl.sessionManagement();
-    	return null;
+    public ResponseEntity<List<Map<String, Object>>> allSession() {
+    	List<Map<String, Object>> activeSessions = adminServiceImpl.sessionManagement();
+    	return ResponseEntity.ok().body(activeSessions);
     }
     
 }
