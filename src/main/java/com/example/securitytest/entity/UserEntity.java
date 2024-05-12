@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @SequenceGenerator(name = "user_gen", sequenceName = "user_seq", initialValue = 1, allocationSize = 50)
 public class UserEntity {
 
+	// EmbeddedId, Embeddable를 추후에 사용해서 userName과 accessUrl 두개를 복합키로 만들어서 사용할 예정 
 	@Id
 	@GeneratedValue(generator = "user_gen", strategy = GenerationType.SEQUENCE)
 	private Long id;
