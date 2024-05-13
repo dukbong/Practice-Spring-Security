@@ -1,5 +1,7 @@
 package com.example.securitytest.config;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -21,10 +23,18 @@ import com.example.securitytest.handler.CustomAuthenticationEntryPoint;
 import com.example.securitytest.handler.CustomLogoutSuccessHandler;
 import com.example.securitytest.handler.CustomSessionExpiredStrategy;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 	
+	private final MessageSource messageSource;
+	
+    @Value("${custom.security.role-hierarchy}")
+    private String roleHierarchy;
+    
 	// session 만료 시 발생
     @Bean
     public SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
@@ -40,13 +50,13 @@ public class SecurityConfig {
     // 권한 핸들러
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        return new CustomAccessDeniedHandler();
+        return new CustomAccessDeniedHandler(messageSource);
     }
     
     // 인증 핸들러
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint();
+        return new CustomAuthenticationEntryPoint(messageSource);
     }
 	
 	// SessionRegistry를 사용하여 현재 활성화된 세션을 추적 ( 세션 정보도 얻을 수 있다. )
@@ -59,7 +69,7 @@ public class SecurityConfig {
 	@Bean
 	public RoleHierarchy roleHierarchy() {
 		RoleHierarchyImpl roleHierarchyImpl = new RoleHierarchyImpl();
-		roleHierarchyImpl.setHierarchy("ROLE_C > ROLE_B > ROLE_A");
+		roleHierarchyImpl.setHierarchy(roleHierarchy);
 		return roleHierarchyImpl;
 	}
 	

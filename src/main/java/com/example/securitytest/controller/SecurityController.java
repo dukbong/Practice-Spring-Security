@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +36,7 @@ public class SecurityController {
 	private final LoginService loginServiceImpl;
 	private final JoinService joinServiceImpl;
 	private final AdminService adminServiceImpl;
+	private final MessageSource messageSource;
 
 	@GetMapping("/")
 	public ResponseEntity<String> mainP() {
@@ -80,7 +84,7 @@ public class SecurityController {
     @GetMapping("/delete/session/c")
     public ResponseEntity<String> invalidateAllSessions() {
     	adminServiceImpl.expireSessionsWithoutRoleC();
-    	return ResponseEntity.ok().body("모든 활성화 세션을 종료시킵니다.");
+    	return ResponseEntity.ok().body(messageSource.getMessage("expire.session.message", null, LocaleContextHolder.getLocale()));
     }
     
 }
