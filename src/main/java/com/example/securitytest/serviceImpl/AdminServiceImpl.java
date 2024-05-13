@@ -73,10 +73,7 @@ public class AdminServiceImpl implements AdminService {
 			if (principal instanceof CustomUserDetails detail) {
 				detail = (CustomUserDetails) principal;
 				List<SessionInformation> sessions = sessionRegistry.getAllSessions(detail, false);
-				
-				
 				boolean hasRole = detail.getAuthorities().stream().map(GrantedAuthority::getAuthority).anyMatch(role -> role.equals("ROLE_C"));
-				
 				if(!hasRole) {
 					for (SessionInformation sessionInfo : sessions) {
 						sessionInfo.expireNow();

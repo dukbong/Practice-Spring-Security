@@ -19,5 +19,9 @@ public class UserEntityId {
 		this.userName = userName;
 		this.accessUrl = accessUrl;
 	}
+
+	public void updateUseName(String userName) {
+		this.userName = userName;
+	}
 	
 }

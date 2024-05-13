@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.securitytest.dto.JoinDTO;
 import com.example.securitytest.entity.UserEntity;
+import com.example.securitytest.entity.UserEntityId;
 import com.example.securitytest.repository.UserEntityRepository;
 import com.example.securitytest.service.JoinService;
 
@@ -22,15 +23,14 @@ public class JoinServiceImpl implements JoinService {
 	@Override
 	public void joinProcess(JoinDTO joinDTO) {
 		log.info("JoinServiceImpl - joinProcess()");
-		boolean duplicateUserNameAndAccessUrl = userEntityRepository.existsByUserName(joinDTO.getUserName());
+		boolean duplicateUserNameAndAccessUrl = userEntityRepository.existsById_UserNameAndId_AccessUrl(joinDTO.getUserName(), joinDTO.getAccessUrl());
 		if(duplicateUserNameAndAccessUrl) {
 			throw new IllegalArgumentException("Duplicate UserName or AccessUrl");
 		}
 		
-		UserEntity userEntity = UserEntity.builder().userName(joinDTO.getUserName())
+		UserEntity userEntity = UserEntity.builder().id(UserEntityId.builder().userName(joinDTO.getUserName()).accessUrl(joinDTO.getAccessUrl()).build())
 											        .passWord(bCryptPasswordEncoder.encode(joinDTO.getPassWord()))
 											        .role("ROLE_B")
-											        .accessUrl(joinDTO.getAccessUrl())
 											        .build();
 		userEntityRepository.save(userEntity);
 	}

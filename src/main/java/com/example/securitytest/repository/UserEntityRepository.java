@@ -5,13 +5,14 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.securitytest.entity.UserEntity;
+import com.example.securitytest.entity.UserEntityId;
 
-public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
-	boolean existsByUserNameAndAccessUrl(String userName, String accessUrl);
+public interface UserEntityRepository extends JpaRepository<UserEntity, UserEntityId> {
+	boolean existsById_UserNameAndId_AccessUrl(String userName, String accessUrl);
 	
-	boolean existsByUserName(String userName);
+	boolean existsById_UserName(String userName);
 
-	Optional<UserEntity> findByUserName(String username);
+	Optional<UserEntity> findById_UserName(String username);
 	
-	Optional<UserEntity> findByUserNameAndAccessUrl(String username, String url);
+	Optional<UserEntity> findById_UserNameAndId_AccessUrl(String username, String accessUrl);
 }

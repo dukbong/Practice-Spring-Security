@@ -26,7 +26,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.info("CustomAddUrlUserDetailsService - loadUserByUsername()");
-		UserEntity findUserEntity = userEntityRepository.findByUserName(username).orElseThrow(() -> new IllegalArgumentException("Not Found User"));
+		UserEntity findUserEntity = userEntityRepository.findById_UserName(username).orElseThrow(() -> new IllegalArgumentException("Not Found User"));
 		return new CustomUserDetails(LoginProcessDTO.builder().userName(username)
 															  .passWord(findUserEntity.getPassWord())
 															  .role(findUserEntity.getRole())
@@ -36,7 +36,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 	@Override
 	public UserDetails loadUserByUsernameAndUrl(String username, Map<String, String> info, LocalDateTime StartTime) throws UsernameNotFoundException {
 		log.info("CustomAddUrlUserDetailsService - loadUserByUsernameAndUrl()");
-		UserEntity findUserEntity = userEntityRepository.findByUserNameAndAccessUrl(username, info.get("url")).orElseThrow(() -> new IllegalArgumentException("Not Found User"));
+		UserEntity findUserEntity = userEntityRepository.findById_UserNameAndId_AccessUrl(username, info.get("url")).orElseThrow(() -> new IllegalArgumentException("Not Found User"));
 		return new CustomUserDetails(LoginProcessDTO.builder().userName(username)
 															  .passWord(findUserEntity.getPassWord())
 															  .role(findUserEntity.getRole())
