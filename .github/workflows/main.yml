@@ -1,0 +1,40 @@
+name: Generate Markdown
+
+on:
+  push:
+    branches:
+      - main  # 혹은 원하는 브랜치로 변경
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send POST request to llama server
+        run: |
+          response=$(curl -X POST -H "Content-Type: application/json" -d '{"model": "llama3", "prompt": "What are the commits on the repository https://github.com/dukbong/Practice-Spring-Security.git", "stream": false}' http://localhost:11434/api/generate)
+          echo "$response" > result.json
+          cat result.json  # 확인용
+
+      - name: Create or update test.md
+        run: |
+          result=$(cat result.json)
+          echo "```markdown" > test.md
+          echo "$result" >> test.md
+          echo "```" >> test.md
+          
+          if [ -f test.md ]; then
+            echo "test.md exists."
+          else
+            echo "test.md does not exist. Creating..."
+            touch test.md
+          fi
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update test.md"
+          branch: main  # 변경할 브랜치
+          commit_user_name: "GitHub Actions"
+          commit_user_email: "actions@github.com"
+          commit_author: "GitHub Actions <actions@github.com>"
