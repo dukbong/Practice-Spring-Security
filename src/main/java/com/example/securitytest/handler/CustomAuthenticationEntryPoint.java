@@ -26,7 +26,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     	
     	request.getSession().invalidate(); // 세션 파기
     	
-    	log.error("401 error 발생");
+    	log.error("401[인증] error 발생");
     	
     	response.setContentType("applicatoin/json");
     	response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 401

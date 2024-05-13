@@ -24,7 +24,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
     	
-    	log.error("403 error 발생");
+    	log.error("403[인가] error 발생");
     	response.setContentType("application/json");
     	response.setStatus(HttpStatus.FORBIDDEN.value());
     	response.getWriter().write(messageSource.getMessage("login.failure.message", null, LocaleContextHolder.getLocale()));
