@@ -21,3 +21,11 @@
 - 계층 권한 설정
 - 세션 생성 정책 설정
 - 미인증 & 미인가 접근 핸들러 조작
+
+#### formLogin 설정 시 흐름
+- `loginProcessingUrl`을 등록하면 Spring security가 내부적으로 인증을 처리한다.
+- login form 제출시 loginProcessingUrl로 POST 방식으로 보내자게 됩니다.
+- UsernamePasswordAuthenticationFilter는 이 요청을 가지고 usernamePasswordAUthenticationToken 객체를 생성합니다.
+- 등록된 AuthenticationProvider를 모두 순회하며 `Authentication: authenticate()`를 호출합니다.
+  - 이 과정에서 `boolean: supports()`를 통해 처리가 가능한지 불가능한지 알 수 있습니다.
+- 순회 하면서 만약 인증이 성공하는 AuthenticationProvider가 있다면 거기서 멈추고 Authentication 객체를 SecurityContextHolder에 저장하므로 로그인 처리를 하게 됩니다.
